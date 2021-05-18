@@ -175,13 +175,14 @@ public class FormGESParcelas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una única Parcela de la tabla.");
         } else {
             int filaSelecc = jTableParcelas.getSelectedRow();
-
             Long id = Long.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 0).toString());
+            String nom = jTableParcelas.getModel().getValueAt(filaSelecc, 1).toString();
+            float area = Float.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 2).toString());
+            boolean priv = Boolean.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 3).toString()); 
+            Parcelas seleccionada = new Parcelas(id, nom, area, priv);
 
-            Parcelas seleccionada;
-
-//            FormModificarParcela modificarParcela = new FormModificarParcela(this, seleccionada);
-//            modificarParcela.setVisible(true);
+            FormModificarParcela modificarParcela = new FormModificarParcela(this, seleccionada);
+            modificarParcela.setVisible(true);
         }
     }//GEN-LAST:event_jButtonModificarActionPerformed
 

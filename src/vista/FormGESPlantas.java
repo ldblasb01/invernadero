@@ -246,6 +246,8 @@ public class FormGESPlantas extends javax.swing.JFrame {
             Long id = Long.valueOf(jTablePlantas.getModel().getValueAt(filaSelecc, 0).toString());
             String nom = jTablePlantas.getModel().getValueAt(filaSelecc, 1).toString();
             Plantas seleccionada = new Plantas(id, nom);
+            
+            
             FormModificarPlanta modificarPlanta = new FormModificarPlanta(this, seleccionada);
             modificarPlanta.setVisible(true);
        }     
