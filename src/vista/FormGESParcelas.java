@@ -42,7 +42,7 @@ public class FormGESParcelas extends javax.swing.JFrame {
         jTableParcelas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de Localizaciones");
+        setTitle("Gestión de Parcelas");
 
         jPanel1.setBackground(new java.awt.Color(255, 102, 153));
         jPanel1.setToolTipText("Gestión de Localizaciones");
@@ -175,11 +175,12 @@ public class FormGESParcelas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una única Parcela de la tabla.");
         } else {
             int filaSelecc = jTableParcelas.getSelectedRow();
-            Long id = Long.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 0).toString());
+            
+            Long idParcela = Long.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 0).toString());
             String nom = jTableParcelas.getModel().getValueAt(filaSelecc, 1).toString();
             float area = Float.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 2).toString());
             boolean priv = Boolean.valueOf(jTableParcelas.getModel().getValueAt(filaSelecc, 3).toString()); 
-            Parcelas seleccionada = new Parcelas(id, nom, area, priv);
+            Parcelas seleccionada = new Parcelas(idParcela, nom, area, priv);
 
             FormModificarParcela modificarParcela = new FormModificarParcela(this, seleccionada);
             modificarParcela.setVisible(true);

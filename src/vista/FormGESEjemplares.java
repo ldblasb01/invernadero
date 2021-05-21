@@ -6,9 +6,15 @@
 package vista;
 
 import entidades.Ejemplares;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +28,7 @@ public class FormGESEjemplares extends javax.swing.JFrame {
      */
     public FormGESEjemplares() {
         initComponents();
+
     }
 
     /**
@@ -48,6 +55,7 @@ public class FormGESEjemplares extends javax.swing.JFrame {
         jButtonPlantar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gestión de Ejemplares");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 51));
 
@@ -187,9 +195,32 @@ public class FormGESEjemplares extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonModificarActionPerformed
+        if (this.jTableEjemplares.getSelectedRowCount() == 0 || this.jTableEjemplares.getSelectedRowCount() > 1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un único ejemplar de la tabla.");
+        } else {
+            int filaSelecc = jTableEjemplares.getSelectedRow();
 
+            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Long idEjemplar = Long.valueOf(jTableEjemplares.getModel().getValueAt(filaSelecc, 0).toString());
+            int edad = Integer.valueOf(jTableEjemplares.getModel().getValueAt(filaSelecc, 1).toString());
+            Date fechaCompra=null;
+            Date fechaPlantacion=null;
+            BigInteger idLocalizacion=null;
+            try {
+                fechaCompra = (Date)(this.jTableEjemplares.getModel().getValueAt(filaSelecc, 2));
+                fechaPlantacion = (Date)(this.jTableEjemplares.getModel().getValueAt(filaSelecc, 4));
+                if(jTableEjemplares.getModel().getValueAt(filaSelecc, 5)!=null)
+                idLocalizacion = BigInteger.valueOf(Long.valueOf(jTableEjemplares.getModel().getValueAt(filaSelecc, 5).toString()));
+            } catch (Exception ex) {
+                Logger.getLogger(FormGESEjemplares.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Long idPlanta = Long.valueOf(jTableEjemplares.getModel().getValueAt(filaSelecc, 3).toString());
+
+            Ejemplares seleccionada = new Ejemplares(idEjemplar, edad, fechaCompra, idPlanta, fechaPlantacion, idLocalizacion);
+            FormModificarEjemplar modificarEjemplar = new FormModificarEjemplar(this, seleccionada);
+            modificarEjemplar.setVisible(true);
+    }//GEN-LAST:event_jButtonModificarActionPerformed
+    }
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonEliminarActionPerformed
@@ -216,9 +247,8 @@ public class FormGESEjemplares extends javax.swing.JFrame {
             FormPlantarEjemplar plantarejemplar = new FormPlantarEjemplar(this, seleccionado);
             plantarejemplar.setVisible(true);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_jButtonPlantarActionPerformed
 
     /**

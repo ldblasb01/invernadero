@@ -74,6 +74,15 @@ public class Ejemplares implements Serializable {
         this.id = id;
     }
 
+    public Ejemplares(Long id, int edad, Date fechaCompra, long idPlanta, Date fechaPlantacion, BigInteger idLocalizacion) {
+        this.id = id;
+        this.edad = edad;
+        this.fechaCompra = fechaCompra;
+        this.idPlanta = idPlanta;
+        this.fechaPlantacion = fechaPlantacion;
+        this.idLocalizacion = idLocalizacion;
+    }
+    
     public Ejemplares(Long id, int edad, Date fechaCompra, long idPlanta) {
         this.id = id;
         this.edad = edad;

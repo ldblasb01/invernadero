@@ -95,6 +95,7 @@ public class FormNuevoEjemplar extends javax.swing.JFrame implements ActionListe
         jButtonFechaCompra = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Nuevo Ejemplar");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);

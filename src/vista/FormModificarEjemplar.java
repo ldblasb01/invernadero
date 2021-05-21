@@ -8,12 +8,10 @@ package vista;
 import entidades.Ejemplares;
 import entidades.Localizaciones;
 import entidades.Plantas;
-import java.awt.ItemSelectable;
 import utils.DateLabelFormatter;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,25 +29,24 @@ import org.jdatepicker.impl.UtilDateModel;
  *
  * @author luis
  */
-public class FormPlantarEjemplar extends javax.swing.JFrame  {
+public class FormModificarEjemplar extends javax.swing.JFrame implements ActionListener {
 
     static FormGESEjemplares padre;
     static Ejemplares ejemplar;
-    private JDatePickerImpl datePicker;
+    private JDatePickerImpl datePickerFechaPlantacion;
 
     /**
      * Creates new form FormNuevaLocalizacion
      */
-    public FormPlantarEjemplar(FormGESEjemplares fpadre, Ejemplares ej) {
+    public FormModificarEjemplar(FormGESEjemplares fpadre, Ejemplares ej) {
         initComponents();
         this.padre = fpadre;
         this.ejemplar = ej;
 
-        this.jLabelAux.setText("AQUIII");
-        
         this.jTextFieldId.setText(String.valueOf(this.ejemplar.getId()));
         this.jTextFieldEdad.setText(String.valueOf(this.ejemplar.getEdad()));
-        this.jTextFieldFechaCompra.setText(String.valueOf(this.ejemplar.getFechaCompra()));
+        
+       // this.jTextFieldFechaCompra.setText(String.valueOf(this.ejemplar.getFechaCompra()));
 
         try {
             javax.persistence.EntityManager entityManager0 = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("bdinvernadero?zeroDateTimeBehavior=convertToNullPU").createEntityManager();
@@ -60,7 +57,8 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
             List<Plantas> result = findPlantaById.getResultList();
             if (result.size() > 0) {
                 Plantas p = (Plantas) result.get(0);
-                this.jTextFieldPlanta.setText(p.getNombre().toString());
+                this.jListPlantas.setSelectedValue(p.getNombre().toString(),true);
+//                this.jTextFieldPlanta.setText(p.getNombre().toString());
             }
         } catch (Exception ex) {
 
@@ -76,10 +74,10 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         p.put("text.year", "Año");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
 
-        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        jButtonFechaPlantacion.add(datePicker);
+        datePickerFechaPlantacion = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        jButtonFechaPlantacion.add(datePickerFechaPlantacion);
 
- //       jButtonFechaPlantacion.addActionListener(this);
+        jButtonFechaPlantacion.addActionListener(this);
 
     }
 
@@ -107,22 +105,22 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         jButtonAplicar = new javax.swing.JButton();
         jPanelLogitud = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
-        jTextFieldFechaCompra = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextFieldPlanta = new javax.swing.JTextField();
-        jTextFieldEdad = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldId = new javax.swing.JTextField();
+        jButtonFechaCompra = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jListPlantas = new javax.swing.JList<>();
+        jTextFieldEdad = new javax.swing.JTextField();
         jPanelLogitud1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jButtonFechaPlantacion = new javax.swing.JButton();
         jComboBoxLocalizaciones = new javax.swing.JComboBox<>();
-        jLabelAux = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Plantar Ejemplar");
+        setTitle("Modificar Ejemplar");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -136,7 +134,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Plantar Ejemplar");
+        jLabel1.setText("Modificar Ejemplar");
 
         jButtonResetearCampos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jButtonResetearCampos.setText("Borrar campos");
@@ -155,7 +153,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         });
 
         jButtonAplicar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButtonAplicar.setText("Aplicar");
+        jButtonAplicar.setText("Modificar");
         jButtonAplicar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAplicarActionPerformed(evt);
@@ -169,10 +167,6 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         jLabelId.setText("Id");
         jLabelId.setToolTipText("");
 
-        jTextFieldFechaCompra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jTextFieldFechaCompra.setToolTipText("");
-        jTextFieldFechaCompra.setEnabled(false);
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Planta");
         jLabel3.setToolTipText("");
@@ -180,14 +174,6 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Fecha de compra");
         jLabel4.setToolTipText("");
-
-        jTextFieldPlanta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jTextFieldPlanta.setToolTipText("");
-        jTextFieldPlanta.setEnabled(false);
-
-        jTextFieldEdad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jTextFieldEdad.setToolTipText("");
-        jTextFieldEdad.setEnabled(false);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText("Edad");
@@ -197,31 +183,43 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         jTextFieldId.setToolTipText("");
         jTextFieldId.setEnabled(false);
 
+        jButtonFechaCompra.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jButtonFechaCompra.setText("Fecha");
+        jButtonFechaCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFechaCompraActionPerformed(evt);
+            }
+        });
+
+        jListPlantas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jListPlantas);
+
         javax.swing.GroupLayout jPanelLogitudLayout = new javax.swing.GroupLayout(jPanelLogitud);
         jPanelLogitud.setLayout(jPanelLogitudLayout);
         jPanelLogitudLayout.setHorizontalGroup(
             jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelLogitudLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelLogitudLayout.createSequentialGroup()
-                            .addComponent(jLabelId)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5))
-                        .addGroup(jPanelLogitudLayout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(83, 83, 83)))
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextFieldFechaCompra, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                        .addComponent(jTextFieldPlanta))
-                    .addComponent(jTextFieldEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19))
+                .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelLogitudLayout.createSequentialGroup()
+                        .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelLogitudLayout.createSequentialGroup()
+                                .addComponent(jLabelId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5))
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonFechaCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelLogitudLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(96, 96, 96))))
         );
         jPanelLogitudLayout.setVerticalGroup(
             jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,18 +227,18 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelId)
-                    .addComponent(jTextFieldEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextFieldFechaCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonFechaCompra))
+                .addGap(8, 8, 8)
+                .addGroup(jPanelLogitudLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextFieldPlanta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(123, 123, 123))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanelLogitud1.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 0)));
@@ -261,12 +259,6 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, localizacionesQuery, eLProperty, jComboBoxLocalizaciones);
         bindingGroup.addBinding(jComboBoxBinding);
 
-        jComboBoxLocalizaciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxLocalizacionesActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelLogitud1Layout = new javax.swing.GroupLayout(jPanelLogitud1);
         jPanelLogitud1.setLayout(jPanelLogitud1Layout);
         jPanelLogitud1Layout.setHorizontalGroup(
@@ -280,8 +272,9 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                         .addComponent(jComboBoxLocalizaciones, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanelLogitud1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-                        .addComponent(jButtonFechaPlantacion, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonFechaPlantacion, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(25, 25, 25))
         );
         jPanelLogitud1Layout.setVerticalGroup(
@@ -298,29 +291,23 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 .addGap(122, 122, 122))
         );
 
-        jLabelAux.setText("aqui");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanelLogitud1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelLogitud, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanelLogitud1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelLogitud, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButtonAplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27)
-                                .addComponent(jButtonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(63, 63, 63)
-                        .addComponent(jLabelAux, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonResetearCampos)))
+                                .addComponent(jButtonVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonResetearCampos))))
                 .addGap(21, 21, 21))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -333,14 +320,12 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelLogitud, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addComponent(jPanelLogitud, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelLogitud1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabelAux, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonResetearCampos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonResetearCampos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAplicar)
                     .addComponent(jButtonVolver))
@@ -372,7 +357,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
 
         boolean ok = true;
         String msj = "";
-        if (this.datePicker.getJFormattedTextField().getText().isEmpty()) {
+        if (this.datePickerFechaPlantacion.getJFormattedTextField().getText().isEmpty()) {
             ok = false;
             msj += "\nLa fecha de plantación es obligatoria.";
         }
@@ -397,7 +382,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 p = (Plantas) result.get(0);
                 msj = "\nID:" + this.jTextFieldId.getText() + "(" + p.getNombre() + ")";
             }
-            msj += "\nFecha de plantación:" + this.jTextFieldFechaCompra.getText() + "\nLocalización: " + ((Localizaciones) this.jComboBoxLocalizaciones.getSelectedItem()).toString();
+        //    msj += "\nFecha de plantación:" + this.jTextFieldFechaCompra.getText() + "\nLocalización: " + ((Localizaciones) this.jComboBoxLocalizaciones.getSelectedItem()).toString();
             Object[] opciones = {"Sí", "No"};
             int i = JOptionPane.showOptionDialog(this, "¿Son los datos de la plantación del Ejemplar correctos?\n" + msj, "Plantar Ejemplar", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
@@ -409,11 +394,11 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 this.ejemplar.setId(Long.valueOf(this.jTextFieldId.getText()));
                 this.ejemplar.setEdad(Integer.valueOf(this.jTextFieldEdad.getText()));
                 this.ejemplar.setIdLocalizacion(BigInteger.valueOf(((Localizaciones) this.jComboBoxLocalizaciones.getSelectedItem()).getId()));
-                String fechaCompraStr = this.datePicker.getJFormattedTextField().getText();
+                String fechaCompraStr = this.datePickerFechaPlantacion.getJFormattedTextField().getText();
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+                
                 Date fechaPlantacion = java.sql.Date.valueOf(LocalDate.parse(fechaCompraStr, dateFormatter));
-
+                
                 this.ejemplar.setFechaPlantacion(fechaPlantacion);
 
                 entityManager0.getTransaction().begin();
@@ -438,7 +423,11 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
 
     private void jButtonResetearCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetearCamposActionPerformed
 
-        this.jTextFieldFechaCompra.setText("");
+        this.jTextFieldEdad.setText("");
+        if(!this.jListPlantas.isSelectionEmpty())
+            this.jListPlantas.setSelectedIndex(-1);
+        if(this.jComboBoxLocalizaciones.getSelectedIndex()!=-1)
+            this.jComboBoxLocalizaciones.setSelectedIndex(-1);
 
     }//GEN-LAST:event_jButtonResetearCamposActionPerformed
 
@@ -453,16 +442,9 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    private void jComboBoxLocalizacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxLocalizacionesActionPerformed
+    private void jButtonFechaCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFechaCompraActionPerformed
         // TODO add your handling code here:
-        if(this.jComboBoxLocalizaciones.getSelectedItem()!=null)
-        this.jLabelAux.setText(this.jComboBoxLocalizaciones.getSelectedItem().toString());
-    }//GEN-LAST:event_jComboBoxLocalizacionesActionPerformed
-
-    static private String selectedString(ItemSelectable is) {
-        Object selected[] = is.getSelectedObjects();
-        return ((selected.length == 0) ? "null" : (String) selected[0]);
-    }
+    }//GEN-LAST:event_jButtonFechaCompraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -482,21 +464,37 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormPlantarEjemplar.class
+            java.util.logging.Logger.getLogger(FormModificarEjemplar.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormPlantarEjemplar.class
+            java.util.logging.Logger.getLogger(FormModificarEjemplar.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormPlantarEjemplar.class
+            java.util.logging.Logger.getLogger(FormModificarEjemplar.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormPlantarEjemplar.class
+            java.util.logging.Logger.getLogger(FormModificarEjemplar.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -517,7 +515,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormPlantarEjemplar(padre, ejemplar).setVisible(true);
+                new FormModificarEjemplar(padre, ejemplar).setVisible(true);
             }
         });
     }
@@ -525,6 +523,7 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JButton jButtonAplicar;
+    private javax.swing.JButton jButtonFechaCompra;
     private javax.swing.JButton jButtonFechaPlantacion;
     private javax.swing.JButton jButtonResetearCampos;
     private javax.swing.JButton jButtonVolver;
@@ -535,15 +534,14 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabelAux;
     private javax.swing.JLabel jLabelId;
+    private javax.swing.JList<String> jListPlantas;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelLogitud;
     private javax.swing.JPanel jPanelLogitud1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldEdad;
-    private javax.swing.JTextField jTextFieldFechaCompra;
     private javax.swing.JTextField jTextFieldId;
-    private javax.swing.JTextField jTextFieldPlanta;
     private java.util.List<entidades.Localizaciones> localizacionesList;
     private javax.persistence.Query localizacionesQuery;
     private java.util.List<entidades.Plantas> plantasList;
@@ -553,5 +551,8 @@ public class FormPlantarEjemplar extends javax.swing.JFrame  {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
- 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

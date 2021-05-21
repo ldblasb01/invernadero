@@ -30,6 +30,8 @@ public class FormModificarParcela extends javax.swing.JFrame {
         initComponents();
         this.padre = fpadre;
         this.parcela = p;
+        
+        
         this.jTextFieldNombre.setText(p.getNombre());
         this.jTextFieldArea.setText(String.valueOf(p.getArea()));
         this.jCheckBox1.setSelected(p.getPrivada());
@@ -59,6 +61,7 @@ public class FormModificarParcela extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Modificar Parcela");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
